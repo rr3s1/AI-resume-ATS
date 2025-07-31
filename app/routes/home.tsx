@@ -1,8 +1,12 @@
+"use client";
 // Import necessary types, components, and data
 import type { Route } from "./+types/home";
 import Navbar from "~/components/Navbar";
 import {resumes} from "../../constants";
 import ResumeCard from "~/components/ResumeCard";
+import {usePuterStore} from "~/lib/puter";
+import {useLocation, useNavigate} from "react-router";
+import {useEffect} from "react";
 
 // Function to set metadata for the page (title, description)
 export function meta({}: Route.MetaArgs) {
@@ -14,6 +18,12 @@ export function meta({}: Route.MetaArgs) {
 
 // The main component for the home page
 export default function Home() {
+    const { auth } = usePuterStore();
+    const navigate = useNavigate();
+
+    useEffect(() => {
+        if(!auth.isAuthenticated) navigate('/auth?next=/');
+    }, [auth.isAuthenticated])
   return (
       // Main container with a custom SVG background that covers the area
       <main className="bg-[url('/images/bg-main.svg')] bg-cover">
