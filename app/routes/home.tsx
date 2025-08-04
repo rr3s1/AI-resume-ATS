@@ -1,4 +1,5 @@
 "use client";
+
 // Import necessary types, components, and data
 import type { Route } from "./+types/home";
 import Navbar from "~/components/Navbar";
