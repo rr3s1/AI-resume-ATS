@@ -1,14 +1,35 @@
 import {type FormEvent, useState} from 'react'
 import Navbar from "~/components/Navbar";
-import  from "~/components/FileUploader";
+import FileUploader from "~/components/FileUploader";
+import {usePuterStore} from "~/lib/puter";
+import {useNavigate} from "react-router";
 
 
 const Upload = () => {
-
+    const { auth, isLoading, fs, ai, kv } = usePuterStore();
+    const navigate = useNavigate();
     const [isProcessing, setIsProcessing] = useState(false);
     const [statusText, setStatusText] = useState('');
+    const [file, setFile] = useState<File | null>(null);
 
+    const handleFileSelect = (file: File | null) => {
+        setFile(file)
+    }
 
+    const handleSubmit = (e: FormEvent<HTMLFormElement>) => {
+        e.preventDefault();
+        const form = e.currentTarget.closest('form');
+        if(!form) return;
+        const formData = new FormData(form);
+
+        const companyName = formData.get('company-name') as string;
+        const jobTitle = formData.get('job-title') as string;
+        const jobDescription = formData.get('job-description') as string;
+
+        if(!file) return;
+
+    
+    }
 
     return (
         <main className="bg-[url('/images/bg-main.svg')] bg-cover">
@@ -42,7 +63,7 @@ const Upload = () => {
 
                             <div className="form-div">
                                 <label htmlFor="uploader">Upload Resume</label>
-                                <FileUploader />
+                                <FileUploader onFileSelect={handleFileSelect} />
                             </div>
 
                             <button className="primary-button" type="submit">
