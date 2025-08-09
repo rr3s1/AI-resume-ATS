@@ -10,9 +10,9 @@ import {generateUUID} from "~/lib/utils";
 
 const Upload = () => {
     const { auth, isLoading, fs, ai, kv } = usePuterStore();
-    const navigate = useNavigate();
+    const navigate = useNavigate(); // Hook for programmatic navigation
     const [isProcessing, setIsProcessing] = useState(false);
-    const [statusText, setStatusText] = useState('');
+    const [statusText, setStatusText] =useState('');
     const [file, setFile] = useState<File | null>(null);
 
     const handleFileSelect = (file: File | null) => {
@@ -53,14 +53,17 @@ const Upload = () => {
         )
         if (!feedback) return setStatusText('Error: Failed to analyze resume');
 
+        // Extract the feedback text, whether it's a simple string or a complex object
         const feedbackText = typeof feedback.message.content === 'string'
             ? feedback.message.content
             : feedback.message.content[0].text;
 
+        // Parse and save the final feedback data
         data.feedback = JSON.parse(feedbackText);
         await kv.set(`resume:${uuid}`, JSON.stringify(data));
         setStatusText('Analysis complete, redirecting...');
-        console.log(data);
+
+        // Navigate to the new resume review page with the unique ID
         navigate(`/resume/${uuid}`);
     }
 
